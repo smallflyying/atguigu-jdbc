@@ -1,35 +1,32 @@
 package com.atguigu.base;
 
-import com.mysql.cj.jdbc.Driver;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Scanner;
 
 /**
  * @author LiHongFei
- * @since 2024/6/7
+ * @since 2024/6/9
  */
-public class JDBCQuick {
+public class JDBCInjection {
 
     public static void main(String[] args) throws Exception {
-        // 1.注册驱动
-//        Class.forName("com.mysql.cj.jdbc.Driver");
-//        DriverManager.registerDriver(new Driver());
+        // 1.注册驱动 (可以省略)
 
         // 2.获取连接对象
-        // String url = "jdbc:mysql://localhost:3307/atguigu";
-        String url = "jdbc:mysql://localhost:3307/atguigu";
-        String username = "root";
-        String password = "123456";
-        Connection connection = DriverManager.getConnection(url, username, password);
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3307/atguigu","root","123456");
 
-        // 3.获取执行SQL语句的对象
+        // 3.获取执行SQL语句对象
         Statement statement = connection.createStatement();
 
-        // 4.编写SQL语句，并执行，接收返回的结果集
-        String sql = "SELECT emp_id,emp_name,emp_salary,emp_age from t_emp";
+        System.out.println("请输入员工姓名: ");
+        Scanner scanner = new Scanner(System.in);
+        String name = scanner.nextLine();
+
+        // 4.编写SQL语句，并执行，接收返回的结果
+        String sql = "SELECT emp_id,emp_name,emp_salary,emp_age from t_emp WHERE emp_name = '"+name+"'";
         ResultSet resultSet = statement.executeQuery(sql);
 
         // 5.处理结果，遍历resultSet结果集
@@ -45,6 +42,5 @@ public class JDBCQuick {
         resultSet.close();
         statement.close();
         connection.close();
-
     }
 }
